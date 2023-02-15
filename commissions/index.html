@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Commissions</title>
+
+        <meta charset="UTF-8">
+        <meta name="og:title" content="Commissions">
+        <meta name="og:description" content="Apply for a custom software commission">
+
+        <!-- SCRIPT IMPORTS -->
+        <script src="/public/js/jquery-3.6.3.min.js"></script>
+        <!-- STYLING IMPORTS -->
+        <link href="/public/css/global.css" rel="stylesheet">
+
+        <style>
+            legend {
+                font-size: larger;
+            }
+            select, input {
+                font-size: medium;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div role="navigation" id="nav-bar">
+                <a class="nav-bar-item" href="/">Home</a>
+                <hr class="vertical-divider" />
+
+                <a class="nav-bar-item" href="/">About Me</a>
+                <hr class="vertical-divider" />
+
+                <a class="nav-bar-item" href="/commissions">Commissions</a>
+                <hr class="vertical-divider" />
+
+                <a class="nav-bar-item" href="/projects">Projects</a>
+            </div>
+            <hr class="horizontal-divider" />
+        </header>
+
+        <main>
+            <div>
+                <h2 style="text-align:center;text-decoration:underline;">Submit a Commission</h2>
+                <form id="commission" style="width:35vw;margin-right:auto;margin-left:auto;">
+                    <fieldset>
+                        <legend>Contact</legend>
+                        <select id="contact-type">
+                            <option value="email">Email</option>
+                            <option value="discord">Discord</option>
+                        </select>
+                        <input id="contact-value" type="text" placeholder="">
+                    </fieldset>
+                    <br />
+                    <fieldset>
+                        <legend>Commission Information</legend>
+                        <select id="commission-type">
+                            <option value="Create Custom Software">Create a software product</option>
+                            <option value="Hire Me Into Team">Hire me into your team</option>
+                        </select>
+                        <br /><br />
+                        <textarea id="description" placeholder="Commission Description
+Provide as much information as possible" spellcheck="true" style="width:98%;resize:none;height:30vh;" maxlength="1024"></textarea>
+                    </fieldset>
+                    <br />
+                    <input type="submit" value="Send Commission" style="width:10vw;margin-left:12.5vw;margin-right:12.5vw;">
+                </form>
+            </div>
+        </main>
+
+        <footer>
+            <hr class="horizontal-divider" />
+            <div id="footer-container">
+                <div class="footer-block">
+                    <h2>Navigation</h2>
+                    <ul>
+                        <li><a href="/">About Me</a></li>
+                        <li><a href="/commissions">Commissions</a></li>
+                        <li><a href="/projects">Projects</a></li>
+                    </ul>
+                </div>
+                <hr class="vertical-divider">
+                <div class="footer-block">
+                    <h2>Contact Me</h2>
+                    <ul>
+                        <li><a href="mailto:acraig176@hotmail.com">Email</a></li>
+                        <li><a href="https://discord.gg/ETXkNpcaNR" target="_blank">Discord</a></li>
+                    </ul>
+                </div>
+                <hr class="vertical-divider" />
+                <div class="footer-block">
+                    <h2>Support Me</h2>
+                    <ul>
+                        <li><a href="https://github.com/DeathHound6" target="_blank">Github</a></li>
+                        <li><a href="https://paypal.me/deathhound6" target="_blank">Donations</a></li>
+                    </ul>
+                </div>
+            </div>
+            <p>Website hosted on <a href="https://pages.github.com" target="_blank">Github Pages</a></p>
+        </footer>
+
+        <script defer>
+            $(document).ready(function() {
+                $("#contact-type").change(function(ev) {
+                    ev.preventDefault();
+                    if ($(this).val() == "email")
+                        $("#contact-value").attr("placeholder", "username@email.com");
+                    else if ($(this).val() == "discord")
+                        $("#contact-value").attr("placeholder", "username#0000");
+                });
+                $("form").submit(async function(ev) {
+                    ev.preventDefault();
+                    if ($("#contact-type").val() == "email") {
+                        if (!/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/.test($("#contact-value").val())) {
+                            alert("Please enter a valid email address");
+                            return;
+                        }
+                    } else if ($("#contact-type").val() == "discord") {
+                        if (!/[0-9]{16,21}/.test($("#contact-value").val())) {
+                            alert("Please enter a valid Discord username");
+                            return;
+                        }
+                    }
+                    const b = {
+                        "embeds": [
+                            {
+                                "title": "Commission",
+                                "type": "rich",
+                                "fields": [
+                                    {
+                                        "name": "Author",
+                                        "value": $("#contact-value").val()
+                                    },
+                                    {
+                                        "name": "Commission Type",
+                                        "value": $("#commission-type").val()
+                                    },
+                                    {
+                                        "name": "Information",
+                                        "value": $("#description").val()
+                                    }
+                                ]
+                            }
+                        ]
+                    };
+                    const r = await fetch(
+                        "https://discord.com/api/webhooks/1073953420932808865/JILUbDCrt2xEvjWNnFNLGzmxv076ZEdcH_5oFsACrtWSjzycEz8b85yA-yGh3UQEeUea",
+                        {
+                            method: "POST",
+                            headers: {"Content-Type":"application/json"},
+                            body: JSON.stringify(b)
+                        }
+                    ).catch(()=>{});
+                    if (r &&  r.ok) {
+                        alert("Your submission has been sent");
+                        window.location.assign("/");
+                        return;
+                    }
+                    console.error(r);
+                    alert("Something went wrong");
+                });
+
+                $("#contact-type").val("email").change();
+            });
+        </script>
+    </body>
+</html>
